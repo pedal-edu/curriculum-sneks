@@ -22,12 +22,21 @@ def ensure_cisc108_tests(test_count, **kwargs):
                label="Overwrote assert_equal", **kwargs)
     student_tests = assert_equal.student_tests
     if student_tests.tests == 0:
-        return gently("You are not unit testing the result.", title="No Student Unit Tests",
-               label="no_student_tests", **kwargs)
+        return gently("You are not unit testing the result.",
+                      title="No Student Unit Tests",
+                      label="no_student_tests", **kwargs)
     elif student_tests.tests < test_count:
-        return gently("You have not written enough unit tests.", label="not_enough_tests",
-               title="Not Enough Student Unit Tests", **kwargs)
+        return gently("You have not written enough unit tests.",
+                      label="not_enough_tests",
+                      title="Not Enough Student Unit Tests", **kwargs)
     elif student_tests.failures > 0:
-        return gently("Your unit tests are not passing.", label="failing_student_tests",
-               title="Student Unit Tests Failing", **kwargs)
+        failures = student_tests.failures
+        successes = student_tests.successes
+        tests = student_tests.tests
+        return gently(f"{failures}/{tests} of your unit tests are not passing.",
+                      label="failing_student_tests",
+                      title="Student Unit Tests Failing",
+                      fields={'failures': failures, 'successes': successes,
+                              'tests': tests},
+                      **kwargs)
     return False
