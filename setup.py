@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='curriculum_sneks',
-    version='1.0.0',
+    version='1.0.1',
     python_requires='>=3.6',
     author='acbart',
     author_email='acbart@udel.edu',
