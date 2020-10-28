@@ -4,7 +4,7 @@ from pedal.sandbox.commands import get_student_data
 
 
 @CompositeFeedbackFunction()
-def ensure_cisc108_tests(test_count, **kwargs):
+def ensure_cisc108_tests(test_count, module_name='cisc108', **kwargs):
     """
     Ensure that the student has not failed their own tests.
     This is for the specific ``cisc108`` library, not the general unittest
@@ -12,8 +12,8 @@ def ensure_cisc108_tests(test_count, **kwargs):
     """
     student = get_student_data()
     if 'assert_equal' not in student:
-        return gently("You have not imported assert_equal from the cisc108 module.",
-               label="missing_cisc108_assert_equal",
+        return gently(f"You have not imported assert_equal from the {module_name} module.",
+               label=f"missing_{module_name}_assert_equal",
                title="Missing assert_equal", **kwargs)
     assert_equal = student['assert_equal']
     if not hasattr(assert_equal, 'student_tests'):
