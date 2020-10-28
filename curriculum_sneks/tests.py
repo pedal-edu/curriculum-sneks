@@ -2,9 +2,10 @@ from pedal.core.feedback import CompositeFeedbackFunction
 from pedal.core.commands import gently
 from pedal.sandbox.commands import get_student_data
 
+# TODO: Decompose these with a helper function that parameterizes these fields.
 
 @CompositeFeedbackFunction()
-def ensure_cisc108_tests(test_count, module_name='cisc108', **kwargs):
+def ensure_cisc108_tests(test_count, **kwargs):
     """
     Ensure that the student has not failed their own tests.
     This is for the specific ``cisc108`` library, not the general unittest
@@ -12,8 +13,8 @@ def ensure_cisc108_tests(test_count, module_name='cisc108', **kwargs):
     """
     student = get_student_data()
     if 'assert_equal' not in student:
-        return gently(f"You have not imported assert_equal from the {module_name} module.",
-               label=f"missing_{module_name}_assert_equal",
+        return gently(f"You have not imported assert_equal from the cisc108 module.",
+               label=f"missing_cisc108_assert_equal",
                title="Missing assert_equal", **kwargs)
     assert_equal = student['assert_equal']
     if not hasattr(assert_equal, 'student_tests'):
