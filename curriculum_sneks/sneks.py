@@ -6,11 +6,17 @@ from pedal.core.commands import explain, gently
 from pedal.cait import parse_program, find_match, find_matches
 
 
-def prevent_printing_functions(report=MAIN_REPORT, **kwargs):
+def prevent_printing_functions(exceptions=None, report=MAIN_REPORT, **kwargs):
+    if exceptions is None:
+        exceptions = set()
+    elif isinstance(exceptions, str):
+        exceptions = {exceptions}
     root = parse_program(report=report)
     defs = root.find_all("FunctionDef")
     for adef in defs:
         name = adef._name
+        if name in exceptions:
+            continue
         for call in find_function_calls("print", root=adef, report=report):
             location = call.locate()
             return explain(f"The function {name} is printing on line {location.line}."
@@ -21,11 +27,17 @@ def prevent_printing_functions(report=MAIN_REPORT, **kwargs):
     return False
 
 
-def ensure_functions_return(report=MAIN_REPORT, **kwargs):
+def ensure_functions_return(exceptions=None, report=MAIN_REPORT, **kwargs):
+    if exceptions is None:
+        exceptions = set()
+    elif isinstance(exceptions, str):
+        exceptions = {exceptions}
     root = parse_program(report=report)
     defs = root.find_all("FunctionDef")
     for adef in defs:
         name = adef._name
+        if name in exceptions:
+            continue
         if not adef.find_match("return"):
             return explain(f"The function {name} is not returning."
                           f" However, that function is supposed to have a return statement.",
